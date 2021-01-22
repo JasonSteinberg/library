@@ -11,6 +11,7 @@ var (
 
 func SetupRouter() {
 	apiRouteHeader := "/api/"
+	router.Use(allowCorsOptions())
 	book.SetUpBookRoutes(router, apiRouteHeader)
 	router.Run(":8445")
 }
