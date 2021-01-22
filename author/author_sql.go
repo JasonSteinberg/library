@@ -61,3 +61,17 @@ func LinkAuthorsToBook(name string, bookID int) {
 		linkAuthorToBook(aid, bookID)
 	}
 }
+
+func RemoveLinksToBook(bookID int) {
+	db := database.GetSqlWriteDB()
+	_, err := db.Exec(`delete from book_author where book_id=?;`, bookID)
+	if err != nil {
+		log.Println("Error deleting links to book", err)
+		return
+	}
+}
+
+func UpdateLinkAuthorsToBook(name string, bookID int) {
+	RemoveLinksToBook(bookID)
+	LinkAuthorsToBook(name, bookID)
+}

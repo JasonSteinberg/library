@@ -41,6 +41,41 @@ func readBook(c *gin.Context) {
 	c.JSON(http.StatusOK, book)
 }
 
+func updateBook(c *gin.Context) {
+	var book Book
+
+	if err := c.ShouldBindJSON(&book); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if book.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad book id"})
+		return
+	}
+
+	err := book.updateBook()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+	c.Status(http.StatusOK)
+}
+
+func deleteBook(c *gin.Context) {
+	var book Book
+
+	c.ShouldBindJSON(&book) // Only check that the ID is valid
+	if book.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad book id"})
+		return
+	}
+
+	err := book.deleteBook()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+	c.Status(http.StatusOK)
+}
+
 func getBookList(c *gin.Context) {
 	bookList, err := getBookListSQL()
 	if err != nil {

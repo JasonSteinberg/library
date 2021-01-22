@@ -86,3 +86,30 @@ func (b *Book) readBook() error {
 	}
 	return nil
 }
+
+func (b *Book) updateBook() error {
+	db := database.GetSqlWriteDB()
+
+	result, err := db.Exec(`insert into books (title, description, isbn)
+				values (?,?,?)`, b.Title, b.Description, b.ISBN)
+	if err != nil {
+		log.Println("updateBook has an issue ", err)
+		return err
+	}
+
+	author.UpdateLinkAuthorsToBook(b.Authors, int(i)) // unsafe cast but okay here
+	return nil
+}
+
+func (b *Book) deleteBook() error {
+	db := database.GetSqlWriteDB()
+
+	_, err := db.Exec(`delete from books where id=?`, b.ID)
+	if err != nil {
+		log.Println("deleteBook has an issue ", err)
+		return err
+	}
+
+	author.RemoveLinksToBook(b.ID) // unsafe cast but okay here
+	return nil
+}
