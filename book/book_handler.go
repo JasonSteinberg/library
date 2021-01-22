@@ -63,13 +63,18 @@ func updateBook(c *gin.Context) {
 func deleteBook(c *gin.Context) {
 	var book Book
 
-	c.ShouldBindJSON(&book) // Only check that the ID is valid
+	bookID := c.Param("uid")
+	i, err := strconv.Atoi(bookID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+	book.ID = i
 	if book.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad book id"})
 		return
 	}
 
-	err := book.deleteBook()
+	err = book.deleteBook()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}

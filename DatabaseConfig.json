@@ -1,7 +1,7 @@
 {
-	"user": "ExampleUser",
-	"password": "Password",
+	"user": "root",
+	"password": "ultra_secret_23_password",
 	"url": "127.0.0.1",
-	"port": "3306",
-	"dbname": "timeTicker"
+	"port": "3307",
+	"dbname": "library"
 }
