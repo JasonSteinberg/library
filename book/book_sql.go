@@ -40,19 +40,48 @@ func getBookList(c *gin.Context) {
 	c.JSON(http.StatusOK, bookList)
 }
 
-func (b *Book) createBook() {
+func (b *Book) createBook() error {
 	db := database.GetSqlWriteDB()
 
 	result, err := db.Exec(`insert into books (title, description, isbn)
 				values (?,?,?)`, b.Title, b.Description, b.ISBN)
 	if err != nil {
 		log.Println("createBook has an issue ", err)
+		return err
 	}
 
 	i, err := result.LastInsertId()
 	if err != nil {
 		log.Println("createBook has an issue ", err)
+		return err
 	}
 
 	author.LinkAuthorsToBook(b.Authors, int(i)) // unsafe cast but okay here
+	return nil
+}
+
+func (b *Book) readBook() error {
+	db := database.GetSqlReadDB()
+
+	rows, err := db.Query(`select title, description, isbn, group_concat(a.name) as author
+				from books
+				inner join book_author ba on books.id = ba.book_id
+				inner join author a on ba.author_id = a.id
+				where books.id = ?
+				group by books.id`, b.ID)
+	if err != nil {
+		log.Println("readBook has an issue ", err)
+		return err
+	}
+
+	if !rows.Next() {
+		return nil
+	}
+
+	rows.Scan(&b.Title, &b.Description, &b.ISBN, &b.Authors)
+	if err != nil {
+		log.Println("readBook read issue ", err)
+		return err
+	}
+	return nil
 }
