@@ -8,6 +8,6 @@ import (
 
 func main() {
 	fmt.Println("Welcome to the Library...")
-	database.LoadDatabaseConfig("")
+	database.LoadDatabaseConfig("DatabaseConfig.json")
 	server.SetupRouter()
 }

@@ -3,11 +3,15 @@ package database
 import (
 	"database/sql"
 	"encoding/json"
+	_ "github.com/go-sql-driver/mysql"
 	"library/structs"
 	"log"
 	"os"
 	"strings"
+	"time"
 )
+
+var readDB *sql.DB
 
 func LoadDatabaseConfig(fileName string) {
 	configFile, err := os.Open(fileName)
@@ -40,15 +44,24 @@ func GetConnectionString() string {
 	return connectionString.String()
 }
 
-func getSqlDB() *sql.DB {
+func OpenGetSqlDB() *sql.DB {
 	openString := GetConnectionString()
 
 	db, err := sql.Open("mysql", openString)
 	if err != nil {
-		log.Fatal(`Fatal Error: Unable to connect to database, check configuration file! Error:`, err)
+		log.Fatal("NO DATABASE!", err)
 	}
+	db.SetConnMaxLifetime(5 * time.Minute)
 
+	readDB = db
 	return db
+}
+
+func getSqlDB() *sql.DB {
+	if readDB != nil {
+		return readDB
+	}
+	return OpenGetSqlDB()
 }
 
 func GetSqlReadDB() *sql.DB {
