@@ -90,14 +90,14 @@ func (b *Book) readBook() error {
 func (b *Book) updateBook() error {
 	db := database.GetSqlWriteDB()
 
-	result, err := db.Exec(`insert into books (title, description, isbn)
+	_, err := db.Exec(`insert into books (title, description, isbn)
 				values (?,?,?)`, b.Title, b.Description, b.ISBN)
 	if err != nil {
 		log.Println("updateBook has an issue ", err)
 		return err
 	}
 
-	author.UpdateLinkAuthorsToBook(b.Authors, int(i)) // unsafe cast but okay here
+	author.UpdateLinkAuthorsToBook(b.Authors, b.ID) // unsafe cast but okay here
 	return nil
 }
 
