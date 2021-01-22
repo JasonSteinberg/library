@@ -1,19 +1,17 @@
 package book
 
 import (
-	"github.com/gin-gonic/gin"
 	"library/author"
 	"library/database"
 	"library/structs"
 	"log"
-	"net/http"
 )
 
 type Book struct {
 	structs.Book
 }
 
-func getBookList(c *gin.Context) {
+func getBookListSQL() ([]structs.Book, error) {
 	var bookList []structs.Book
 
 	db := database.GetSqlReadDB()
@@ -25,6 +23,7 @@ func getBookList(c *gin.Context) {
 				group by books.id`)
 	if err != nil {
 		log.Println("getBookList ", err)
+		return bookList, err
 	}
 	defer rows.Close()
 
@@ -33,11 +32,12 @@ func getBookList(c *gin.Context) {
 		err := rows.Scan(&book.ID, &book.Title, &book.Description, &book.ISBN, &book.Authors)
 		if err != nil {
 			log.Println("Oh no from getBookList", err)
+			return bookList, err
 		}
 		bookList = append(bookList, book)
 	}
 
-	c.JSON(http.StatusOK, bookList)
+	return bookList, nil
 }
 
 func (b *Book) createBook() error {

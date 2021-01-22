@@ -40,3 +40,13 @@ func readBook(c *gin.Context) {
 
 	c.JSON(http.StatusOK, book)
 }
+
+func getBookList(c *gin.Context) {
+	bookList, err := getBookListSQL()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, bookList)
+}
