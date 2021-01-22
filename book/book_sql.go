@@ -69,6 +69,7 @@ func (b *Book) readBook() error {
 				inner join author a on ba.author_id = a.id
 				where books.id = ?
 				group by books.id`, b.ID)
+	defer rows.Close()
 	if err != nil {
 		log.Println("readBook has an issue ", err)
 		return err
