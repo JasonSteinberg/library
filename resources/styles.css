@@ -17,8 +17,7 @@ h1 {
 }
 
 .book-list {
-    width: 100vw;
-    margin: 0 auto;
+    margin: 15 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 25px;

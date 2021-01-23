@@ -148,6 +148,28 @@ func bookStatus(bookID int) (Status, error) {
 	return status, nil
 }
 
+func bookHistorySQL(bookID int) ([]structs.History, error) {
+	var historyList []structs.History
+	db := database.GetSqlReadDB()
+
+	rows, err := db.Query(`select status, date
+				from history
+				where book_id = ?`, bookID)
+	defer rows.Close()
+	if err != nil {
+		log.Println("rebookHistoryadBook has an issue ", err)
+		return historyList, err
+	}
+
+	for rows.Next() {
+		hist := structs.History{}
+		rows.Scan(&hist.Status, &hist.When)
+		historyList = append(historyList, hist)
+	}
+
+	return historyList, nil
+}
+
 func bookAvailability(bookID int, status Status) error {
 	db := database.GetSqlWriteDB()
 

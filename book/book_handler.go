@@ -137,3 +137,20 @@ func checkinBook(c *gin.Context) {
 	checkinBookSql(id)
 	c.Status(http.StatusOK)
 }
+
+func bookHistory(c *gin.Context) {
+	bookID := c.Param("uid")
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	history, err := bookHistorySQL(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, history)
+}

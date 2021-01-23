@@ -5,18 +5,50 @@
 	</head>
 	<body class="App">
 		<h1>
-			{{ .category }}
+			{{ .book.Title }}
 		</h1>
+
 		<div class='create-book-container'>
-			<h2> Title </h2>
-			<p> Written by:  </p>
-			<p> Description: </p>
-			<p>ISBN: </p>
+			<a href="/index.html"><<<--- Back</a>
+			<h2> Modify Book </h2>
+			<form id="createBookForm">
+				<label htmlFor="title">
+					Title:
+					<input name="title" id="title" value="{{ .book.Title }}"/>
+				</label>
+				<label htmlFor="description">
+					Description:
+					<input name="description" id="description" value="{{ .book.Description }}"/>
+				</label>
+				<label htmlFor="isbn">
+					ISBN:
+					<input name="isbn" id="isbn" value="{{ .book.ISBN }}"/>
+				</label>
+				<label htmlFor="authors">
+					Authors:
+					<input name="authors" id="authors" value="{{ .book.Authors }}"/>
+				</label>
+				<p>
+					<input type="button" onclick="updateBook();" value="Update Book" />
+				</p>
+			</form>
+
 		</div>
 	    <div class='create-book-container'>
-			<h2>History</h2>
-			<p> Checkout blah:  </p>
-			<p> checkin Blah: </p>
+			{{ if .history }}
+				{{range .history}}
+				<p>
+					{{if .Status}}
+					Checked out
+					{{else}}
+					Checked in
+					{{end}}
+					{{ .When }}
+				</p>
+				{{ end }}
+			{{ else }}
+			  <p>Unloved book, No checkouts! ;(</p>
+			{{ end }}
 	    </div>
 	</body>
 </html>

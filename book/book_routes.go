@@ -10,4 +10,5 @@ func SetUpBookRoutes(router *gin.Engine, routePath string) {
 	router.DELETE(routePath+"book/:uid", deleteBook)
 	router.POST(routePath+"book/:uid/checkout", checkoutBook)
 	router.POST(routePath+"book/:uid/checkin", checkinBook)
+	router.GET(routePath+"book/:uid/history", bookHistory)
 }
