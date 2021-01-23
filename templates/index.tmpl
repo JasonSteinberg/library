@@ -8,7 +8,7 @@
 			{{ .category }}
 		</h1>
 		<div class='create-book-container'>
-			<form>
+			<form id="createBookForm">
 				<h2>Create Book</h2>
 				<label htmlFor="title">
 					Title:
@@ -27,17 +27,42 @@
 					<input name="authors" id="authors"/>
 				</label>
 				<p>
-					<button>Submit</button>
+					<input type="button" onclick="createNewBook();" value="Create Book" />
 				</p>
 			</form>
 		</div>
 	    <div class='book-list'>
-		  <div class='book-container'>
-			<h2> Title </h2>
-			  <p> Written by:  </p>
-			  <p> Description: </p>
-			  <p>ISBN: </p>
-		  </div>
+			{{range .books}}
+			  <div class='book-container'>
+				<h2> <a href="/book/{{.ID}}/index.html"> {{ .Title }} </a></h2>
+				  <p> Written by: {{ .Authors }} </p>
+				  <p> Description: {{ .Description }} </p>
+				  <p>ISBN: {{ .ISBN }} </p>
+				  <p>{{if .Available}}Out of Stock{{else}}In Stock{{end}}</p>
+			  </div>
+			{{ end }}
 	    </div>
 	</body>
+<script language="JavaScript">
+
+	function getFormJson(formID) {
+		const form = document.getElementById(formID);
+		const data = new FormData(form)
+		const values = JSON.stringify(Object.fromEntries(data.entries()));
+		return values;
+	}
+
+	function createNewBook() {
+		const values = getFormJson("createBookForm")
+		$.ajax({
+            type: "POST",
+            url: "/api/book",
+            data: values,
+            dataType: "json"
+        });
+		$('#createBookForm')[0].reset();
+		location.reload();
+	}
+</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </html>
