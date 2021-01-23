@@ -39,11 +39,22 @@
 				  <p> Description: {{ .Description }} </p>
 				  <p>ISBN: {{ .ISBN }} </p>
 				  <p>{{if .Available}}Out of Stock{{else}}In Stock{{end}}</p>
+				  <p></p>
+				  {{if .Available}}
+				  	<a href="javascript:checkIn({{.ID}});">Check in</a>
+				  {{else}}
+				  	<a href="javascript:checkOut({{.ID}});">Check out</a>
+				  {{end}}
+				  <a href="javascript:deleteBook({{.ID}});" onclick="deleteBook({{.ID}})">Delete</a>
+
 			  </div>
 			{{ end }}
 	    </div>
 	</body>
 <script language="JavaScript">
+	function relaodPage() {
+		setTimeout()
+	}
 
 	function getFormJson(formID) {
 		const form = document.getElementById(formID);
@@ -59,9 +70,42 @@
             url: "/api/book",
             data: values,
             dataType: "json"
-        });
+        }).done(function () {
+			window.location.reload(true);
+		});
 		$('#createBookForm')[0].reset();
-		location.reload();
+	}
+
+	function checkIn(id) {
+		$.ajax({
+             type: "POST",
+             url: "/api/book/"+id+"/checkin",
+             dataType: "json"
+         }).done(function () {
+         	window.location.reload(true);
+		});
+	}
+
+	function checkOut(id) {
+		console.log("enterX")
+		$.ajax({
+			type: "POST",
+			url: "/api/book/"+id+"/checkout",
+			dataType: "json"
+		}).done(function () {
+			window.location.reload(true);
+		});
+
+	}
+
+	function deleteBook(id) {
+		$.ajax({
+             type: "DELETE",
+             url: "/api/book/"+id,
+             dataType: "json"
+        }).done(function () {
+			window.location.reload(true);
+		});
 	}
 </script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

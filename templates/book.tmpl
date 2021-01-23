@@ -11,7 +11,7 @@
 		<div class='create-book-container'>
 			<a href="/index.html"><<<--- Back</a>
 			<h2> Modify Book </h2>
-			<form id="createBookForm">
+			<form id="modifyBookForm">
 				<label htmlFor="title">
 					Title:
 					<input name="title" id="title" value="{{ .book.Title }}"/>
@@ -28,6 +28,7 @@
 					Authors:
 					<input name="authors" id="authors" value="{{ .book.Authors }}"/>
 				</label>
+				<input type="hidden" name="book_id" id="book_id" value="{{ .book.ID }}"/>
 				<p>
 					<input type="button" onclick="updateBook();" value="Update Book" />
 				</p>
@@ -51,4 +52,26 @@
 			{{ end }}
 	    </div>
 	</body>
+	<script language="JavaScript">
+
+		function getFormJson(formID) {
+			const form = document.getElementById(formID);
+			const data = new FormData(form)
+			const values = JSON.stringify(Object.fromEntries(data.entries()));
+			return values;
+		}
+
+		function updateBook() {
+			const values = getFormJson("modifyBookForm")
+			$.ajax({
+				type: "PUT",
+				url: "/api/book/"+$("#book_id").val(),
+				data: values,
+				dataType: "json"
+			}).done(function () {
+				window.location.reload(true);
+			});
+		}
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </html>
