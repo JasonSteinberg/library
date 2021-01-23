@@ -11,7 +11,8 @@ var (
 
 func SetUpWebRoutes(router *gin.Engine, routePath string) {
 	router.LoadHTMLGlob("templates/*")
-	router.GET("/index", func(c *gin.Context) {
+	router.StaticFile("/styles.css", "./resources/styles.css")
+	router.GET("/index.html", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"title":    "The Library",
 			"category": "Books",

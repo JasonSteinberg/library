@@ -1,0 +1,8 @@
+body {
+  margin: 20px;
+  background: linear-gradient(
+          to left,
+          rgba(10, 25, 90, 1) 0%,
+          rgba(0, 64, 64, 1) 100%
+  );
+}
