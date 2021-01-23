@@ -1,6 +1,7 @@
 package book
 
 import (
+	"errors"
 	"library/author"
 	"library/database"
 	"library/structs"
@@ -10,6 +11,13 @@ import (
 type Book struct {
 	structs.Book
 }
+
+type Status int
+
+const (
+	Available   Status = 0
+	Unavailable Status = 1
+)
 
 func getBookListSQL() ([]structs.Book, error) {
 	var bookList []structs.Book
@@ -116,4 +124,61 @@ func (b *Book) deleteBook() error {
 
 	author.RemoveLinksToBook(b.ID) // unsafe cast but okay here
 	return nil
+}
+
+func bookStatus(bookID int) (Status, error) {
+	db := database.GetSqlReadDB()
+
+	rows, err := db.Query(`select checkedout
+				from books
+				where books.id = ?`, bookID)
+	defer rows.Close()
+	if err != nil {
+		log.Println("readBook has an issue ", err)
+		return 0, err
+	}
+
+	if !rows.Next() {
+		return 0, errors.New("No book!")
+	}
+
+	var status Status
+	rows.Scan(&status)
+
+	return status, nil
+}
+
+func bookAvailability(bookID int, status Status) error {
+	db := database.GetSqlWriteDB()
+
+	_, err := db.Exec(`update books
+    							set checkedout = ?
+    							where id = ?;`, status, bookID)
+	if err != nil {
+		log.Println("bookAvailability has an issue ", err)
+		return err
+	}
+
+	return nil
+}
+
+func bookCheck(bookID int, status Status) error {
+	db := database.GetSqlWriteDB()
+
+	_, err := db.Exec(`insert into history (book_id, status, date)
+				values (?,?,now())`, bookID, status)
+	if err != nil {
+		log.Println("bookCheck has an issue ", err)
+		return err
+	}
+
+	return bookAvailability(bookID, status)
+}
+
+func checkinBookSql(bookID int) error {
+	return bookCheck(bookID, Available)
+}
+
+func checkoutBookSql(bookID int) error {
+	return bookCheck(bookID, Unavailable)
 }

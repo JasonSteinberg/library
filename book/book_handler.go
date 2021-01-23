@@ -17,6 +17,7 @@ func createBook(c *gin.Context) {
 	err := book.createBook()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	c.Status(http.StatusOK)
 }
@@ -63,6 +64,7 @@ func updateBook(c *gin.Context) {
 	err = book.updateBook()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	c.Status(http.StatusOK)
 }
@@ -74,6 +76,7 @@ func deleteBook(c *gin.Context) {
 	i, err := strconv.Atoi(bookID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	book.ID = i
 	if book.ID == 0 {
@@ -84,6 +87,7 @@ func deleteBook(c *gin.Context) {
 	err = book.deleteBook()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	c.Status(http.StatusOK)
 }
@@ -96,4 +100,40 @@ func getBookList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, bookList)
+}
+
+func checkoutBook(c *gin.Context) {
+	bookID := c.Param("uid")
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	status, err := bookStatus(id)
+	if status != Available || err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Book is already check out!"})
+		return
+	}
+
+	checkoutBookSql(id)
+	c.Status(http.StatusOK)
+}
+
+func checkinBook(c *gin.Context) {
+	bookID := c.Param("uid")
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	status, err := bookStatus(id)
+	if status != Unavailable || err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Book is not checked out!"})
+		return
+	}
+
+	checkinBookSql(id)
+	c.Status(http.StatusOK)
 }
