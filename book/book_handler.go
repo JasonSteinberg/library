@@ -19,7 +19,7 @@ func createBook(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func readBook(c *gin.Context) {
@@ -66,7 +66,7 @@ func updateBook(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func deleteBook(c *gin.Context) {
@@ -89,7 +89,7 @@ func deleteBook(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func getBookList(c *gin.Context) {
@@ -117,7 +117,7 @@ func checkoutBook(c *gin.Context) {
 	}
 
 	checkoutBookSql(id)
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func checkinBook(c *gin.Context) {
@@ -135,7 +135,7 @@ func checkinBook(c *gin.Context) {
 	}
 
 	checkinBookSql(id)
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func bookHistory(c *gin.Context) {
