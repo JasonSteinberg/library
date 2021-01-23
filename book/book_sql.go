@@ -24,7 +24,7 @@ func getBookListSQL() ([]structs.Book, error) {
 
 	db := database.GetSqlReadDB()
 	rows, err := db.Query(
-		`select books.id, title, description, isbn, group_concat(a.name) as author
+		`select books.id, title, description, isbn, group_concat(a.name) as author, checkedout as available
 				from books
 				inner join book_author ba on books.id = ba.book_id
 				inner join author a on ba.author_id = a.id
@@ -37,7 +37,7 @@ func getBookListSQL() ([]structs.Book, error) {
 
 	for rows.Next() {
 		book := structs.Book{}
-		err := rows.Scan(&book.ID, &book.Title, &book.Description, &book.ISBN, &book.Authors)
+		err := rows.Scan(&book.ID, &book.Title, &book.Description, &book.ISBN, &book.Authors, &book.Available)
 		if err != nil {
 			log.Println("Oh no from getBookList", err)
 			return bookList, err
