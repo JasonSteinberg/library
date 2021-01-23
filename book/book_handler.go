@@ -44,16 +44,23 @@ func readBook(c *gin.Context) {
 func updateBook(c *gin.Context) {
 	var book Book
 
+	bookID := c.Param("uid")
+	id, err := strconv.Atoi(bookID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad book id!"})
+		return
+	}
 	if err := c.ShouldBindJSON(&book); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	book.ID = id
 	if book.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad book id"})
 		return
 	}
 
-	err := book.updateBook()
+	err = book.updateBook()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}

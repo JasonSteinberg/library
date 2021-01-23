@@ -90,8 +90,12 @@ func (b *Book) readBook() error {
 func (b *Book) updateBook() error {
 	db := database.GetSqlWriteDB()
 
-	_, err := db.Exec(`insert into books (title, description, isbn)
-				values (?,?,?)`, b.Title, b.Description, b.ISBN)
+	_, err := db.Exec(`update books 
+							  set title=?, 
+							      description=?,
+							      isbn=?
+						      where id=?`,
+		b.Title, b.Description, b.ISBN, b.ID)
 	if err != nil {
 		log.Println("updateBook has an issue ", err)
 		return err
