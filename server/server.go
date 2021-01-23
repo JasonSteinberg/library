@@ -9,9 +9,9 @@ var (
 	router = gin.Default()
 )
 
-func SetupRouter() {
+func SetupRouter() *gin.Engine {
 	apiRouteHeader := "/api/"
 	router.Use(allowCorsOptions())
 	book.SetUpBookRoutes(router, apiRouteHeader)
-	router.Run(":8445")
+	return router
 }
