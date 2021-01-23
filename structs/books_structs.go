@@ -6,4 +6,5 @@ type Book struct {
 	Description string `json:"description"`
 	ISBN        string `json:"isbn" binding:"required,min=8,max=10"`
 	Authors     string `json:"authors" binding:"required,min=2,max=200"`
+	Available   bool
 }
