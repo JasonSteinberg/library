@@ -19,6 +19,12 @@ func SetUpWebRoutes(router *gin.Engine, routePath string) {
 			"category": "Books",
 		})
 	})
+	router.GET("/book/:uid/index.html", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "book.tmpl", gin.H{
+			"title":    "The Library",
+			"category": "Books",
+		})
+	})
 }
 
 func SetupWebRouter(router *gin.Engine) {
