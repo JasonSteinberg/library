@@ -9,6 +9,8 @@ The main page has the state of all books, if you want to download it you can hit
 curl 127.0.0.1:8445/api/books
 ```
 
+You can look at the database in the file: `Database.sql`
+
 
 Main screen:
 ![Screenshot 2021-01-23](https://github.com/JasonSteinberg/libraryBackend/blob/master/GitHub/Main.png)
