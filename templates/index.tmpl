@@ -1,9 +1,43 @@
 <html>
-<head>
-	<title>{{ .title }}</title>
-	 <link rel="stylesheet" type="text/css" href="/styles.css">
-</head>
-	<h1>
-		{{ .category }}
-	</h1>
+	<head>
+		<title>{{ .title }}</title>
+		 <link rel="stylesheet" type="text/css" href="/styles.css">
+	</head>
+	<body class="App">
+		<h1>
+			{{ .category }}
+		</h1>
+		<div class='create-book-container'>
+			<form>
+				<h2>Create Book</h2>
+				<label htmlFor="title">
+					Title:
+					<input name="title" id="title"/>
+				</label>
+				<label htmlFor="description">
+					Description:
+					<input name="description" id="description"/>
+				</label>
+				<label htmlFor="isbn">
+					ISBN:
+					<input name="isbn" id="isbn"/>
+				</label>
+				<label htmlFor="authors">
+					Authors:
+					<input name="authors" id="authors"/>
+				</label>
+				<p>
+					<button>Submit</button>
+				</p>
+			</form>
+		</div>
+	    <div class='book-list'>
+		  <div class='book-container'>
+			<h2> Title </h2>
+			  <p> Written by:  </p>
+			  <p> Description: </p>
+			  <p>ISBN: </p>
+		  </div>
+	    </div>
+	</body>
 </html>
